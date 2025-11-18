@@ -1,0 +1,837 @@
+/* =========================================
+   1. VARIABLES & RESET
+   ========================================= */
+:root {
+    --background: #0a0f18;
+    --foreground: #f2f2f2;
+    --accent-color: #d2a123;
+    --link-bg-gradient: linear-gradient(90deg, #818188, #8149ae);
+    --galaxy-gradient: linear-gradient(90deg, #8548ba, #5322c6, #032e59);
+    
+    /* Galaxy Theme Colors */
+    --galaxy-deep-blue: rgba(10, 20, 100, 0.15);
+    --galaxy-vibrant-pink: rgba(255, 0, 200, 0.15);
+    --galaxy-deep-purple: rgba(80, 0, 150, 0.15);
+    
+    --main-dark-bg-start: #0a0f18;
+    --main-dark-bg-via: #100b1a;
+    --main-dark-bg-end: #0a0f18;
+    
+    --nav-bg: rgba(0, 0, 0, 0.2);
+    --nav-border: rgba(255, 255, 255, 0.1);
+}
+
+html {
+    scroll-behavior: smooth;
+    overflow-x: hidden; /* Fixes the black bar on the right */
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--main-dark-bg-start);
+    color: var(--foreground);
+    overflow-x: hidden; /* Double protection against horizontal scroll */
+    min-height: 100vh;
+    width: 100%;
+}
+
+*, :after, :before {
+    box-sizing: border-box;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+}
+
+button {
+    font-family: inherit;
+}
+
+/* =========================================
+   2. BACKGROUND & ANIMATIONS
+   ========================================= */
+.background-nebula-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: -10;
+    overflow: hidden;
+    background-image: linear-gradient(to bottom right, var(--main-dark-bg-start), var(--main-dark-bg-via), var(--main-dark-bg-end));
+}
+
+.nebula-bg {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 75% 25%, var(--galaxy-deep-blue) 0%, rgba(10, 15, 24, 0) 50%),
+        radial-gradient(circle at 25% 75%, var(--galaxy-vibrant-pink) 0%, rgba(10, 15, 24, 0) 50%),
+        radial-gradient(circle at 50% 50%, var(--galaxy-deep-purple) 0%, rgba(10, 15, 24, 0) 40%);
+    filter: blur(50px);
+    opacity: 0.8;
+    animation: nebula-move 60s linear infinite alternate;
+}
+
+@keyframes nebula-move {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.2); }
+}
+
+.stars, .stars2, .stars3 {
+    position: fixed; /* Fixed ensures they stay on screen */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.star {
+    position: absolute;
+    border-radius: 50%;
+    background: white;
+    animation: twinkle 3s infinite ease-in-out alternate;
+}
+
+.falling {
+    position: absolute;
+    border-radius: 50%;
+    background: white;
+    animation: fall linear infinite;
+}
+
+@keyframes twinkle {
+    from { opacity: 0.3; transform: scale(1); }
+    to { opacity: 1; transform: scale(1.2); }
+}
+
+@keyframes fall {
+    from { transform: translateY(0) translateX(0); opacity: 1; }
+    to { transform: translateY(100vh) translateX(20vw); opacity: 0; }
+}
+
+/* Galaxy Text Animation */
+@keyframes galaxyText {
+    0% { background-position: 0%; }
+    100% { background-position: 100%; }
+}
+
+/* =========================================
+   3. NAVIGATION
+   ========================================= */
+.main-nav-bar {
+    position: fixed;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100; /* High Z-index so stars don't cover it */
+    width: 95%;
+    max-width: 48rem;
+}
+
+.nav-bar-content {
+    background-color: var(--nav-bg);
+    backdrop-filter: blur(16px);
+    border-radius: 9999px;
+    border: 1px solid var(--nav-border);
+    height: 3.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-links-container {
+    display: flex;
+    gap: 3rem;
+}
+
+.nav-link {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+    position: relative;
+}
+
+.nav-link:hover {
+    color: #fff;
+}
+
+.nav-link:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 100%;
+    height: 2px;
+    background: var(--link-bg-gradient);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+    transform-origin: center;
+}
+
+.nav-link:hover:after {
+    transform: scaleX(1);
+}
+
+/* =========================================
+   4. HERO SECTION
+   ========================================= */
+.o-view {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding-top: 60px;
+    width: 100%;
+    position: relative;
+}
+
+.o-view p {
+    color: #d2a123;
+    font-weight: 500;
+    font-size: 18px;
+    background-color: rgba(230, 196, 59, 0.15);
+    padding: 12px 30px;
+    border-radius: 50px;
+    border: 1px solid rgba(210, 161, 35, 0.8);
+    margin-bottom: 20px;
+}
+
+.o-view h1 {
+    font-size: 120px; /* Default desktop size */
+    font-weight: 800;
+    margin: 0;
+    color: #fff;
+    line-height: 1.1;
+}
+
+.o-view p1 {
+    color: #c8c3d4;
+    font-size: 24px;
+    margin-top: 20px;
+    display: block;
+}
+
+.buttons-o-view {
+    display: flex;
+    gap: 30px;
+    margin-top: 50px;
+}
+
+.buttons-o-view button {
+    font-size: 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden; /* Crucial for shiny animation */
+}
+
+.buttons-o-view a {
+    display: block;
+    padding: 15px 40px; /* moved padding to anchor for better clickable area */
+    width: 100%;
+    height: 100%;
+}
+
+#b1 {
+    background-color: var(--accent-color);
+    color: #000;
+    font-weight: 600;
+}
+
+#b2 {
+    background-color: transparent;
+    color: #fff;
+    border: 1px solid #ebdcc4;
+}
+
+/* ✨ SHINY ANIMATION LOGIC */
+#b1::before, #b2::before, .card-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: all 0.6s;
+}
+
+#b1:hover::before, #b2:hover::before, .card-button:hover::before {
+    left: 100%;
+}
+/* End Shiny Logic */
+
+#b1:hover { transform: translateY(-3px); background-color: #b88d1f; }
+#b2:hover { transform: translateY(-3px); background-color: rgba(255, 255, 255, 0.1); }
+
+
+/* =========================================
+   5. PORTFOLIO SECTION
+   ========================================= */
+.portfolio {
+    padding: 100px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.portfolio h1 {
+    font-size: 50px;
+    font-weight: 600;
+    background: var(--galaxy-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200%;
+    animation: galaxyText 10s ease infinite;
+    text-align: center;
+}
+
+.portfolio p {
+    font-size: 20px;
+    color: #c8c3d4;
+    text-align: center;
+    margin-bottom: 50px;
+    max-width: 800px;
+}
+
+.gallery-container {
+    width: 80%;
+    max-width: 1200px;
+}
+
+.gallery-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.photo-card {
+    flex: 1;
+    height: 250px; /* Fixed height for desktop */
+    border-radius: 15px;
+    position: relative;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transition: transform 0.1s ease-out; /* Faster for tilt */
+}
+
+.photo-inner {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 15px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.photo-inner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* changed from contain to cover to fill card */
+    display: block;
+}
+
+.hidden {
+    display: none !important;
+}
+
+#showMoreBtn {
+    font-size: 16px;
+    font-weight: 600;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    background: var(--galaxy-gradient);
+    background-size: 200%;
+    color: white;
+    animation: galaxyText 10s ease infinite;
+    transition: transform 0.3s ease;
+    margin-top: 20px;
+}
+
+#showMoreBtn:hover {
+    transform: scale(1.05);
+}
+
+/* =========================================
+   6. ABOUT SECTION
+   ========================================= */
+.about-main {
+    padding: 100px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.about-main h1 {
+    font-size: 60px;
+    background: var(--galaxy-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200%;
+    animation: galaxyText 10s ease infinite;
+    margin-bottom: 60px;
+}
+
+.about-me {
+    display: flex;
+    justify-content: center;
+    gap: 80px;
+    width: 90%;
+    max-width: 1200px;
+}
+
+.about-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.ab1, .ab2, .ab3 {
+    background-color: rgba(26, 26, 26, 0.6);
+    padding: 30px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    color: #c4c1cb;
+    line-height: 1.6;
+}
+
+.ab1 {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.ab1 img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--accent-color);
+}
+
+.about-photos {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.abp-photos-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 140px);
+    gap: 15px;
+    width: 100%;
+    max-width: 450px;
+}
+
+.abp-photo-cell {
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+    overflow: hidden;
+    background-color: rgba(255,255,255,0.05);
+    transition: background-color 0.5s ease;
+}
+
+.abp-photo-cell img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.9s ease, opacity 0.5s ease;
+    opacity: 0; /* Hidden by default for fade in */
+    transform: scale(0.95);
+}
+
+.abp-photo-cell img.loaded {
+    opacity: 1;
+    transform: scale(1);
+}
+
+
+/* =========================================
+   7. PRICING SECTION
+   ========================================= */
+.pricing-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 100px 20px;
+    width: 100%;
+}
+
+.pricing-title {
+    font-size: 55px;
+    font-weight: 700;
+    background: var(--galaxy-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200%;
+    animation: galaxyText 10s ease infinite;
+    text-align: center;
+}
+
+.pricing-subtitle {
+    color: #c8c3d4;
+    margin-bottom: 50px;
+    text-align: center;
+}
+
+.pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+    width: 90%;
+    max-width: 1300px;
+}
+
+.price-card {
+    background-color: rgba(26, 26, 26, 0.7);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.3s ease;
+    display: flex;
+}
+
+.price-card:hover {
+    transform: translateY(-10px);
+    border-color: rgba(133, 72, 186, 0.5);
+}
+
+.card-content {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.card-title {
+    font-size: 22px;
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.card-description {
+    color: #b0b0b0;
+    font-size: 14px;
+    margin-bottom: 20px;
+    flex-grow: 1;
+}
+
+.card-price {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+.card-button {
+    text-align: center;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: transparent;
+    color: white;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden; /* For shine */
+    transition: background 0.3s;
+}
+
+.card-button:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+/* =========================================
+   8. CONTACT SECTION
+   ========================================= */
+.contact-section {
+    padding: 100px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.contact-title {
+    font-size: 55px;
+    font-weight: 700;
+    background: var(--galaxy-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200%;
+    animation: galaxyText 10s ease infinite;
+}
+
+.contact-subtitle {
+    color: #c8c3d4;
+    margin-bottom: 40px;
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    width: 100%;
+    max-width: 900px;
+}
+
+.contact-card {
+    background-color: rgba(26, 26, 26, 0.6);
+    padding: 25px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.3s;
+}
+
+.contact-card:hover {
+    transform: translateY(-5px);
+    background-color: rgba(40, 40, 40, 0.8);
+}
+
+.contact-handle {
+    background: var(--galaxy-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200%;
+    font-weight: 600;
+}
+
+/* =========================================
+   9. MEDIA QUERIES (RESPONSIVE FIXES)
+   ========================================= */
+
+/* --- Tablet (Max Width: 1024px) --- */
+@media screen and (max-width: 1024px) {
+    .o-view h1 {
+        font-size: 80px;
+    }
+    
+    .pricing-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .about-me {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .gallery-container {
+        width: 95%;
+    }
+}
+
+/* --- Mobile (Max Width: 768px) --- */
+@media screen and (max-width: 768px) {
+    .nav-links-container {
+        gap: 1.5rem;
+    }
+    
+    .o-view h1 {
+        font-size: 60px;
+    }
+    
+    .gallery-row {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .photo-card {
+        width: 100%;
+        height: 300px; /* Taller cards on mobile */
+    }
+
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --- Small Mobile (Max Width: 600px) --- */
+@media screen and (max-width: 600px) {
+    
+    /* Fix Navigation Spacing */
+    .nav-links-container {
+        gap: 15px; /* Tighter spacing */
+    }
+    
+    .nav-link {
+        padding: 5px;
+        font-size: 12px; /* Smaller font */
+    }
+
+    /* FIX THE BOGGY HERO SECTION */
+    .o-view {
+        padding-top: 100px;
+        height: auto;
+        min-height: 90vh;
+        justify-content: flex-start;
+    }
+
+    .o-view h1 {
+        font-size: 42px; /* Much smaller title */
+        line-height: 1.2;
+        padding: 0 10px;
+    }
+    
+    .o-view p {
+        font-size: 12px;
+        padding: 8px 20px;
+    }
+    
+    .o-view p1 {
+        font-size: 16px;
+        padding: 0 20px;
+    }
+
+    .buttons-o-view {
+        flex-direction: column;
+        width: 100%;
+        padding: 0 30px;
+        gap: 15px;
+    }
+
+    .buttons-o-view a {
+        padding: 15px 0;
+    }
+
+    /* Fix Pricing Grid */
+    .pricing-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Fix About Photos */
+    .abp-photos-container {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 100%;
+    }
+}
+
+/* --- Mobile (Max Width: 600px) --- */
+@media screen and (max-width: 600px) {
+    
+    /* Fix Navigation Spacing */
+    .nav-links-container {
+        gap: 15px; 
+    }
+    
+    .nav-link {
+        padding: 5px;
+        font-size: 12px; 
+    }
+
+    /* FIX: Center the Hero Section & Remove Black Space */
+    .o-view {
+        /* 1. Force full screen height */
+        height: 100vh;
+        min-height: 100vh;
+        
+        /* 2. Center content vertically and horizontally */
+        display: flex;
+        flex-direction: column;
+        justify-content: center; 
+        align-items: center;
+        
+        /* 3. Reset padding so it doesn't push down too far */
+        padding-top: 0; 
+        padding-bottom: 0;
+    }
+
+    .o-view h1 {
+        font-size: 48px; 
+        line-height: 1.2;
+        margin: 15px 0; /* Add breathing room around title */
+    }
+    
+    .o-view p {
+        font-size: 12px;
+        margin-top: 60px; /* Push slightly down from navbar */
+    }
+    
+    .buttons-o-view {
+        flex-direction: column;
+        width: 100%;
+        padding: 0 40px;
+        gap: 15px;
+        margin-top: 30px;
+    }
+
+    /* Fix Pricing Grid */
+    .pricing-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Fix About Photos */
+    .abp-photos-container {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 100%;
+    }
+}
+
+/* --- CSS-DRIVEN ANIMATION (Original Method) --- */
+
+/* 1. The Animation Keyframes */
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(40px) scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* 2. The Target Class (Inner Container) */
+.photo-inner {
+    opacity: 0; /* CRITICAL: Starts invisible */
+    width: 100%;
+    height: 100%;
+    /* The animation runs once ('forwards' keeps it visible at the end) */
+    animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* 3. Staggered Delays (So they don't all appear at once) */
+/* 1st card in the row waits 0.1s */
+.gallery-row .photo-card:nth-child(1) .photo-inner { 
+    animation-delay: 0.1s; 
+}
+
+/* 2nd card in the row waits 0.2s */
+.gallery-row .photo-card:nth-child(2) .photo-inner { 
+    animation-delay: 0.2s; 
+}
+
+/* 3rd card in the row waits 0.3s */
+.gallery-row .photo-card:nth-child(3) .photo-inner { 
+    animation-delay: 0.3s; 
+}
+
+/* Ensure the images fit correctly */
+.photo-inner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: inherit;
+}
